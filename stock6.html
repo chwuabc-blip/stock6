@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>5000元必勝下單計算機</title>
+  <link rel="apple-touch-icon" href="https://img.icons8.com/color/180/calculator.png">
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    /* 舒適清爽的淺色模式 */
+    body { background-color: #F0F4F8; margin: 0; padding: 16px; color: #2D3748; -webkit-tap-highlight-color: transparent; }
+    .app-container { max-width: 480px; margin: 0 auto; background: #FFFFFF; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 20px; border: 1px solid #E2E8F0; }
+    
+    /* 勝利感標題 */
+    h1 { font-size: 1.4rem; color: #1E3F66; text-align: center; margin: 0 0 16px 0; font-weight: 800; letter-spacing: 0.5px; }
+    
+    /* 統一美化外框設計 (Card Style 搭配藍色邊框) */
+    .card-box { background: #F8FAFC; border: 2px solid #CBD5E0; border-radius: 16px; padding: 14px; margin-bottom: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+    .card-box.blue-border { border-color: #3182CE; background: #EBF3FA; }
+    
+    .input-label { font-size: 0.95rem; color: #2B6CB0; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .price-input { width: 100%; font-size: 2.3rem; font-weight: 800; text-align: center; padding: 8px; border: 2px solid #3182CE; border-radius: 12px; outline: none; background: #FFFFFF; color: #1A202C; }
+    .price-input:focus { border-color: #2B6CB0; box-shadow: 0 0 0 3px rgba(49,130,206,0.2); }
+    
+    .aligned-box { font-size: 0.9rem; color: #4A5568; margin-top: 8px; font-weight: 600; text-align: center; }
+    .aligned-val { color: #DD6B20; font-weight: 700; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .stat-card { background: #F8FAFC; border: 2px solid #CBD5E0; border-radius: 12px; padding: 12px; text-align: center; }
+    .stat-card.highlight-red { border-color: #FEB2B2; background: #FFF5F5; }
+    .stat-card.highlight-blue { border-color: #90CDF4; background: #EBF8FF; }
+    .stat-title { font-size: 0.85rem; color: #4A5568; margin-bottom: 4px; font-weight: 700; }
+    
+    .stat-value-red { font-size: 2.1rem; font-weight: 900; color: #E53E3E; }
+    .stat-value-blue { font-size: 1.7rem; font-weight: 800; color: #2B6CB0; }
+    .stat-unit { font-size: 0.85rem; color: #718096; margin-left: 2px; font-weight: normal; }
+    
+    /* 區塊標題外框感 */
+    .section-title { font-size: 1rem; font-weight: 700; color: #2C5282; margin: 16px 0 8px 0; border-left: 5px solid #3182CE; padding-left: 8px; display: flex; justify-content: space-between; align-items: center; }
+
+    .result-list { background: #FFFFFF; border-radius: 12px; border: 2px solid #CBD5E0; overflow: hidden; }
+    .result-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 16px; border-bottom: 1px solid #EDF2F7; }
+    .result-item:last-child { border-bottom: none; }
+    
+    .item-label { font-size: 0.95rem; font-weight: 700; color: #2D3748; }
+    .item-val { font-size: 1.25rem; font-weight: 700; color: #1A202C; }
+    
+    /* 僅 2% 目標金額為紅色 */
+    .item-val.red-highlight { color: #E53E3E; font-size: 1.35rem; font-weight: 900; }
+    .item-val.stop-loss { color: #1A202C; font-weight: 700; }
+
+    /* 歷史紀錄外框 */
+    .history-container { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 4px; }
+    .history-chip { background: #FEFCBF; border: 1px solid #D69E2E; border-radius: 8px; padding: 4px 10px; font-size: 0.8rem; color: #744210; white-space: nowrap; cursor: pointer; font-weight: 700; }
+    .clear-history { font-size: 0.75rem; color: #E53E3E; cursor: pointer; background: none; border: none; font-weight: bold; }
+
+    /* 價差標籤放大切齊 */
+    .diff-tag { font-size: 1rem; color: #2B6CB0; font-weight: 700; background: #EBF3FA; padding: 3px 10px; border-radius: 6px; margin-right: 10px; border: 1px solid #90CDF4; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <h1>💰 5000元必勝下單計算機 💵</h1>
+
+  <!-- 輸入外框 (藍色強調) -->
+  <div class="card-box blue-border">
+    <div class="input-label">請輸入目前股價 (元)</div>
+    <input type="number" id="priceInput" class="price-input" placeholder="請輸入股價" step="0.1" value="78" oninput="calculate()" onkeydown="checkEnter(event)">
+    <div class="aligned-box">對齊基準股價：<span id="alignedPrice" class="aligned-val">80.0</span> 元</div>
+  </div>
+
+  <!-- 歷史紀錄外框 -->
+  <div class="card-box" style="padding: 10px 14px; margin-bottom: 12px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <span style="font-size: 0.8rem; color: #4A5568; font-weight: 700;">🕒 最近查詢紀錄 (按Enter記錄，最多12筆)：</span>
+      <button class="clear-history" onclick="clearHistory()">清除紀錄</button>
+    </div>
+    <div class="history-container" id="historyBar">
+      <span style="font-size: 0.75rem; color: #A0AEC0; font-style: italic;">尚無紀錄，輸入完股價按 Enter 記錄</span>
+    </div>
+  </div>
+
+  <!-- 核心資訊外框 -->
+  <div class="grid-2">
+    <div class="stat-card highlight-red">
+      <div class="stat-title">每次可買進股數</div>
+      <div class="stat-value-red" id="shareQty">64<span class="stat-unit">股</span></div>
+    </div>
+    <div class="stat-card highlight-blue">
+      <div class="stat-title">買滿 1 張需操作</div>
+      <div class="stat-value-blue" id="opsCount">16<span class="stat-unit">次</span></div>
+    </div>
+  </div>
+
+  <!-- 漲幅目標價位外框 -->
+  <div class="section-title">📈 漲幅目標價位</div>
+  <div class="result-list">
+    <div class="result-item">
+      <span class="item-label">0.5% 漲幅</span>
+      <div>
+        <span class="diff-tag" id="d05">+0.4 元</span>
+        <span class="item-val" id="p05">78.4 元</span>
+      </div>
+    </div>
+    <div class="result-item">
+      <span class="item-label">1.0% 漲幅</span>
+      <div>
+        <span class="diff-tag" id="d10">+0.8 元</span>
+        <span class="item-val" id="p10">78.8 元</span>
+      </div>
+    </div>
+    <div class="result-item">
+      <span class="item-label">1.5% 漲幅</span>
+      <div>
+        <span class="diff-tag" id="d15">+1.2 元</span>
+        <span class="item-val" id="p15">79.2 元</span>
+      </div>
+    </div>
+    <!-- 2.0% 僅總金額紅色 -->
+    <div class="result-item" style="background: #FFF5F5;">
+      <span class="item-label" style="color: #E53E3E;">2.0% 漲幅 ★</span>
+      <div>
+        <span class="diff-tag" id="d20" style="background:#FED7D7; color:#742A2A; border-color:#FEB2B2;">+1.6 元</span>
+        <span class="item-val red-highlight" id="p20">79.6 元</span>
+      </div>
+    </div>
+    <!-- 5% 漲幅 -->
+    <div class="result-item">
+      <span class="item-label">5.0% 漲幅</span>
+      <div>
+        <span class="diff-tag" id="d50">+4.0 元</span>
+        <span class="item-val" id="p50">82.0 元</span>
+      </div>
+    </div>
+    <!-- 7% 漲幅 -->
+    <div class="result-item">
+      <span class="item-label">7.0% 漲幅</span>
+      <div>
+        <span class="diff-tag" id="d70">+5.6 元</span>
+        <span class="item-val" id="p70">83.6 元</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 保本安全防線外框 -->
+  <div class="section-title">🛡️ 保本安全防線</div>
+  <div class="result-list">
+    <div class="result-item">
+      <span class="item-label">保本當沖價差</span>
+      <span class="item-val stop-loss" id="pDT">0.20 元</span>
+    </div>
+    <div class="result-item">
+      <span class="item-label">保本隔日價差</span>
+      <span class="item-val stop-loss" id="pON">0.40 元</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const refTable = [
+    [20, 0.05, 0.10, 0.20, 0.30, 0.40, 1.00, 1.40, 0.05, 0.10],
+    [30, 0.05, 0.15, 0.30, 0.45, 0.60, 1.50, 2.10, 0.10, 0.15],
+    [40, 0.05, 0.20, 0.40, 0.60, 0.80, 2.00, 2.80, 0.10, 0.20],
+    [50, 0.10, 0.30, 0.50, 0.80, 1.00, 2.50, 3.50, 0.20, 0.20],
+    [60, 0.10, 0.30, 0.60, 0.90, 1.20, 3.00, 4.20, 0.20, 0.30],
+    [70, 0.10, 0.40, 0.70, 1.10, 1.40, 3.50, 4.90, 0.20, 0.30],
+    [80, 0.10, 0.40, 0.80, 1.20, 1.60, 4.00, 5.60, 0.20, 0.40],
+    [90, 0.10, 0.50, 0.90, 1.40, 1.80, 4.50, 6.30, 0.30, 0.40],
+    [100, 0.50, 0.50, 1.00, 1.50, 2.00, 5.00, 7.00, 0.50, 0.50],
+    [110, 0.50, 1.00, 1.50, 2.00, 2.50, 5.50, 7.70, 0.50, 0.50],
+    [120, 0.50, 1.00, 1.50, 2.00, 2.50, 6.00, 8.40, 0.50, 0.50],
+    [130, 0.50, 1.00, 1.50, 2.00, 3.00, 6.50, 9.10, 0.50, 0.50],
+    [140, 0.50, 1.00, 1.50, 2.50, 3.00, 7.00, 9.80, 0.50, 1.00],
+    [150, 0.50, 1.00, 1.50, 2.50, 3.00, 7.50, 10.50, 0.50, 1.00],
+    [160, 0.50, 1.00, 2.00, 2.50, 3.50, 8.00, 11.20, 0.50, 1.00],
+    [170, 0.50, 1.00, 2.00, 3.00, 3.50, 8.50, 11.90, 0.50, 1.00],
+    [180, 0.50, 1.00, 2.00, 3.00, 4.00, 9.00, 12.60, 0.50, 1.00],
+    [190, 0.50, 1.00, 2.00, 3.00, 4.00, 9.50, 13.30, 0.50, 1.00],
+    [200, 0.50, 1.00, 2.00, 3.00, 4.00, 10.00, 14.00, 0.50, 1.00],
+    [210, 0.50, 1.50, 2.50, 3.50, 4.50, 10.50, 14.70, 0.50, 1.00],
+    [220, 0.50, 1.50, 2.50, 3.50, 4.50, 11.00, 15.40, 1.00, 1.00],
+    [230, 0.50, 1.50, 2.50, 3.50, 5.00, 11.50, 16.10, 1.00, 1.00],
+    [240, 0.50, 1.50, 2.50, 4.00, 5.00, 12.00, 16.80, 1.00, 1.00],
+    [250, 0.50, 1.50, 2.50, 4.00, 5.00, 12.50, 17.50, 1.00, 1.00],
+    [260, 0.50, 1.50, 3.00, 4.00, 5.50, 13.00, 18.20, 1.00, 1.00],
+    [270, 0.50, 1.50, 3.00, 4.50, 5.50, 13.50, 18.90, 1.00, 1.50],
+    [280, 0.50, 1.50, 3.00, 4.50, 6.00, 14.00, 19.60, 1.00, 1.50],
+    [290, 0.50, 1.50, 3.00, 4.50, 6.00, 14.50, 20.30, 1.00, 1.50],
+    [300, 0.50, 1.50, 3.00, 4.50, 6.00, 15.00, 21.00, 1.00, 1.50],
+    [310, 0.50, 2.00, 3.50, 5.00, 6.50, 15.50, 21.70, 1.00, 1.50],
+    [320, 0.50, 2.00, 3.50, 5.00, 6.50, 16.00, 22.40, 1.00, 1.50],
+    [330, 0.50, 2.00, 3.50, 5.00, 7.00, 16.50, 23.10, 1.00, 1.50],
+    [340, 0.50, 2.00, 3.50, 5.50, 7.00, 17.00, 23.80, 1.00, 1.50],
+    [350, 0.50, 2.00, 3.50, 5.50, 7.00, 17.50, 24.50, 1.00, 1.50],
+    [360, 0.50, 2.00, 4.00, 5.50, 7.50, 18.00, 25.20, 1.00, 1.50],
+    [370, 0.50, 2.00, 4.00, 6.00, 7.50, 18.50, 25.90, 1.00, 1.50],
+    [380, 0.50, 2.00, 4.00, 6.00, 8.00, 19.00, 26.60, 1.00, 1.50],
+    [390, 0.50, 2.00, 4.00, 6.00, 8.00, 19.50, 27.30, 1.00, 1.50],
+    [400, 0.50, 2.00, 4.00, 6.00, 8.00, 20.00, 28.00, 1.00, 2.00]
+  ];
+
+  let searchHistory = [];
+
+  function calculate() {
+    const p = parseFloat(document.getElementById('priceInput').value);
+    if (isNaN(p) || p <= 0) return;
+
+    const qty = Math.floor(5000 / p);
+    const ops = Math.ceil(1000 / (qty || 1));
+
+    document.getElementById('shareQty').innerHTML = `${qty}<span class="stat-unit">股</span>`;
+    document.getElementById('opsCount').innerHTML = `${ops}<span class="stat-unit">次</span>`;
+
+    let alignedP = Math.ceil(p / 10) * 10;
+    if (alignedP < 20) alignedP = 20;
+    document.getElementById('alignedPrice').innerText = alignedP.toFixed(1);
+
+    let row = refTable[0];
+    for (let i = refTable.length - 1; i >= 0; i--) {
+      if (refTable[i][0] <= alignedP) {
+        row = refTable[i];
+        break;
+      }
+    }
+
+    const setTarget = (dId, pId, diff) => {
+      document.getElementById(dId).innerText = `+${diff.toFixed(1)} 元`;
+      document.getElementById(pId).innerText = `${(p + diff).toFixed(1)} 元`;
+    };
+
+    setTarget('d05', 'p05', row[2]);
+    setTarget('d10', 'p10', row[3]);
+    setTarget('d15', 'p15', row[4]);
+    setTarget('d20', 'p20', row[5]);
+    setTarget('d50', 'p50', row[6]);
+    setTarget('d70', 'p70', row[7]);
+
+    document.getElementById('pDT').innerText = `${row[8].toFixed(2)} 元`;
+    document.getElementById('pON').innerText = `${row[9].toFixed(2)} 元`;
+  }
+
+  function checkEnter(event) {
+    if (event.key === 'Enter') {
+      const p = parseFloat(document.getElementById('priceInput').value);
+      if (!isNaN(p) && p > 0) {
+        addHistory(p);
+        document.getElementById('priceInput').blur();
+      }
+    }
+  }
+
+  function addHistory(val) {
+    if (searchHistory.length === 0 || searchHistory[0] !== val) {
+      searchHistory.unshift(val);
+      if (searchHistory.length > 12) searchHistory.pop(); // 最多12筆
+      updateHistoryUI();
+    }
+  }
+
+  function setHistoryPrice(val) {
+    document.getElementById('priceInput').value = val;
+    calculate();
+  }
+
+  function updateHistoryUI() {
+    const bar = document.getElementById('historyBar');
+    if (searchHistory.length === 0) {
+      bar.innerHTML = `<span style="font-size: 0.75rem; color: #A0AEC0; font-style: italic;">尚無紀錄，輸入完股價按 Enter 記錄</span>`;
+      return;
+    }
+    bar.innerHTML = searchHistory.map(val => `<div class="history-chip" onclick="setHistoryPrice(${val})">🔍 ${val}元</div>`).join('');
+  }
+
+  function clearHistory() {
+    searchHistory = [];
+    updateHistoryUI();
+  }
+
+  calculate();
+</script>
+
+</body>
+</html>
