@@ -1,4 +1,4 @@
-const CACHE_NAME = 'winma-pro-v7.2';
+const CACHE_NAME = 'winma-pro-v7.2.1';
 const APP_SHELL = [
   './stock%207.html',
   './manifest.json',
@@ -29,18 +29,23 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // 網頁本身採網路優先，離線時退回已快取版本。
+  // 網頁本身採網路優先。只有 V7.2 主程式可更新主程式快取，
+  // 其他獨立 HTML（例如 ch-calculator.html）絕不可覆寫 V7.2 快取。
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
+      const mainAppPath = new URL('./stock%207.html', self.registration.scope).pathname;
       try {
         const response = await fetch(request);
-        if (response && response.ok) {
+        if (response && response.ok && url.pathname === mainAppPath) {
           const cache = await caches.open(CACHE_NAME);
-          cache.put('./stock%207.html', response.clone());
+          await cache.put('./stock%207.html', response.clone());
         }
         return response;
       } catch (error) {
-        return (await caches.match('./stock%207.html')) || Response.error();
+        if (url.pathname === mainAppPath) {
+          return (await caches.match('./stock%207.html')) || Response.error();
+        }
+        return Response.error();
       }
     })());
     return;
@@ -54,7 +59,7 @@ self.addEventListener('fetch', event => {
       const response = await fetch(request);
       if (response && response.ok) {
         const cache = await caches.open(CACHE_NAME);
-        cache.put(request, response.clone());
+        await cache.put(request, response.clone());
       }
       return response;
     } catch (error) {
