@@ -1,0 +1,37 @@
+{
+  "id": "./stock%207.html",
+  "name": "贏麻神器 Pro",
+  "short_name": "贏麻神器",
+  "description": "台股行情、選股與盤中下單試算工具",
+  "lang": "zh-TW",
+  "start_url": "./stock%207.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#0D1512",
+  "theme_color": "#0D1512",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
