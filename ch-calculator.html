@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CH超級計算機</title>
+<meta name="application-name" content="CH超級計算機">
+<meta name="theme-color" content="#121815">
+<style>
+html,body{margin:0;padding:0;background:#121815;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans TC','Microsoft JhengHei',sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8px}
+.app-card{width:100%;max-width:880px;background:#1A231E;border-radius:18px;padding:16px;box-shadow:0 12px 35px rgba(0,0,0,.8);border:1px solid #2A372F;display:flex;flex-direction:column;gap:12px}
+.header-row{display:flex;justify-content:space-between;align-items:center;padding:0 4px;gap:8px}
+.app-title{font-size:22px;font-weight:900;color:#58C186;letter-spacing:1px;flex:none}
+.sys-info{display:flex;align-items:center;gap:6px;background:#222F28;padding:6px 12px;border-radius:10px;border:1px solid #3A4F42;font-size:15px;font-weight:800;color:#93A89A}
+.sys-info input{width:80px;min-width:0;background:#161E1A;border:1px solid #3A4F42;border-radius:6px;color:#E2E8F0;font-size:16px;font-weight:900;text-align:center;padding:2px 4px;outline:none}
+.sys-info input:focus{border-color:#58C186}
+.price-card{background:#222F28;border:1px solid #3A4F42;border-radius:14px;padding:12px}
+.pxrow{display:flex;gap:8px;align-items:center}
+.px{flex:1;min-width:0;width:0;border:2px solid #3A4F42;border-radius:12px;background:#161E1A;color:#FFF;text-align:center;font-size:3rem;font-weight:900;padding:6px;outline:none;letter-spacing:1px}
+.px:focus{border-color:#58C186;box-shadow:0 0 12px rgba(88,193,134,.4)}
+.ibtn{width:52px;height:58px;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:none;border:none;transition:all .1s}
+.ibtn svg{width:24px;height:24px}
+.ibtn.s{border:1px solid #3E8E63;color:#58C186;background:transparent}
+.ibtn.d{border:1px solid #B5453A;color:#E2604F;background:transparent}
+.ibtn:active{filter:brightness(1.2);transform:scale(.96)}
+.hist{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:10px}
+.hq{min-width:0;padding:8px 0;border-radius:8px;border:1px solid #3A4F42;background:#161E1A;color:#CBD5E1;cursor:pointer;font-size:15px;font-weight:800;text-align:center}
+.hq:hover{border-color:#58C186;color:#FFF}
+.hq.on{background:#22382C;color:#58C186;border-color:#58C186}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.col{min-width:0;border-radius:14px;padding:10px}
+.col.g{background:rgba(62,142,99,.08);border:1px solid rgba(62,142,99,.3)}
+.col.r{background:rgba(178,69,58,.08);border:1px solid rgba(178,69,58,.3)}
+.rt{display:grid;grid-template-columns:36px minmax(0,1fr) 100px 65px;align-items:center;padding:10px 4px;min-width:0}
+.rt+.rt{border-top:1px dashed #3A4F42}
+.rt .star{font-size:15px;text-align:center;font-weight:bold}
+.col.g .rt .star{color:#58C186}
+.col.r .rt .star{color:#E2604F}
+.rt .v{font-size:18px;font-weight:900;padding-left:4px;white-space:nowrap}
+.col.g .v{color:#58C186}
+.col.r .v{color:#E2604F}
+.rt .pct{font-size:13px;color:#93A89A;font-weight:700;text-align:center;line-height:1.3;white-space:nowrap}
+.rt .sh{font-size:15px;font-weight:800;text-align:right;padding-right:4px;color:#E2E8F0;white-space:nowrap}
+.rt.limit-row .star{color:#FACC15!important}
+.be{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.be .c{min-width:0;background:#222F28;border:1px solid #3A4F42;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.be .lbl{font-size:14px;color:#93A89A;font-weight:700;white-space:nowrap}
+.be .lbl span{color:#58C186;margin-left:6px;font-size:13px}
+.be .val{font-size:20px;font-weight:900;color:#FFF;white-space:nowrap}
+@media(max-width:600px){
+ body{align-items:flex-start;padding:6px}
+ .app-card{padding:9px;border-radius:14px;gap:8px}
+ .header-row{padding:0 2px;gap:5px}
+ .app-title{font-size:19px;letter-spacing:0}
+ .sys-info{gap:4px;padding:5px 7px;font-size:12px}
+ .sys-info input{width:62px;font-size:14px}
+ #stepInfo{font-size:11px!important;margin-left:1px!important;white-space:nowrap}
+ .price-card{padding:8px}
+ .px{font-size:clamp(2rem,10vw,2.6rem);padding:5px;letter-spacing:0}
+ .ibtn{width:42px;height:48px;border-radius:10px}
+ .ibtn svg{width:21px;height:21px}
+ .hist{gap:4px;margin-top:7px}
+ .hq{padding:7px 0;font-size:13px}
+ .cols{gap:6px}
+ .col{padding:5px;border-radius:10px}
+ .rt{grid-template-columns:20px minmax(0,1fr) 49px 39px;padding:9px 1px}
+ .rt .star{font-size:12px}
+ .rt .v{font-size:clamp(13px,3.8vw,16px);padding-left:1px;letter-spacing:-.3px}
+ .rt .pct{font-size:10px;letter-spacing:-.3px}
+ .rt .pct span{font-size:9px!important}
+ .rt .sh{font-size:11px;padding-right:1px}
+ .be{gap:6px}
+ .be .c{padding:9px 7px;gap:3px}
+ .be .lbl{font-size:11px}
+ .be .lbl span{font-size:10px;margin-left:2px}
+ .be .val{font-size:clamp(15px,4.5vw,18px)}
+}
+@media(max-width:360px){
+ .app-title{font-size:17px}
+ .sys-info{padding:4px}
+ .sys-info input{width:54px}
+ .rt{grid-template-columns:17px minmax(0,1fr) 44px 35px}
+ .rt .v{font-size:12px}
+ .rt .sh{font-size:10px}
+ .be .lbl{font-size:10px}
+ .be .val{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="app-card">
+  <div class="header-row">
+    <div class="app-title">CH超級計算機</div>
+    <div class="sys-info">
+      <span>資金</span>
+      <input id="cap" type="number" value="5000" step="500" inputmode="numeric" oninput="runCalc()">
+      <span id="stepInfo" style="color:#58C186;margin-left:4px;">間距: -</span>
+    </div>
+  </div>
+  <div class="price-card">
+    <div class="pxrow">
+      <input id="px" class="px" type="number" value="116.0" step="0.1" inputmode="decimal" aria-label="目前股價">
+      <button class="ibtn s" id="btnSearch" type="button" title="記錄股價" aria-label="記錄股價">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M11.5 3C16.1944 3 20 6.80558 20 11.5C20 13.523 19.2933 15.381 18.1132 16.8404L21.1364 19.8636C21.4879 20.2151 21.4879 20.7849 21.1364 21.1364C20.7849 21.4879 20.2151 21.1364 19.8636 21.1364L16.8404 18.1132C15.381 19.2933 13.523 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3ZM11.5 18.2C15.2003 18.2 18.2 15.2003 18.2 11.5C18.2 7.79969 15.2003 4.8 11.5 4.8C7.79969 4.8 4.8 7.79969 4.8 11.5C4.8 15.2003 7.79969 18.2 11.5 18.2Z" fill="currentColor"/></svg>
+      </button>
+      <button class="ibtn d" id="btnTrash" type="button" title="清空股價歷史" aria-label="清空股價歷史">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M8.1 3C8.1 2.5 8.5 2.1 9 2.1H15C15.5 2.1 15.9 2.5 15.9 3V3.9H8.1V3ZM10 15.9C9.5 15.9 9.1 15.5 9.1 15V10C9.1 9.5 9.5 9.1 10 9.1C10.5 9.1 10.9 9.5 10.9 10V15C10.9 15.5 10.5 15.9 10 15.9ZM13.1 15C13.1 15.5 13.5 15.9 14 15.9C14.5 15.9 14.9 15.5 14.9 15V10C14.9 9.5 14.5 9.1 14 9.1C13.5 9.1 13.1 9.5 13.1 10V15ZM2.1 6C2.1 5.5 2.5 5.1 3 5.1H21C21.5 5.1 21.9 6.5 21 6.9H19.8L18.8 18.7C18.7 19.9 17.7 20.9 16.5 20.9H7.5C6.3 20.9 5.3 19.9 5.2 18.7L4.2 6.9H3C2.5 6.9 2.1 6.5 2.1 6Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="hist" id="hist"></div>
+  </div>
+  <div class="cols">
+    <div class="col g" id="cd" aria-label="低買價格"></div>
+    <div class="col r" id="cu" aria-label="高賣價格"></div>
+  </div>
+  <div class="be">
+    <div class="c"><div><div class="lbl">當沖保本<span id="beDd">+0.50</span></div></div><div class="val" id="beD">116.50</div></div>
+    <div class="c"><div><div class="lbl">隔日保本<span id="beNd">+1.00</span></div></div><div class="val" id="beN">117.00</div></div>
+  </div>
+</div>
+<script>
+const FEE=0.001425*0.28;
+const NUM_ICONS=['①','②','③','④','⑤'];
+let histList=[];
+try{histList=JSON.parse(localStorage.getItem('pxHist')||'[]');if(!Array.isArray(histList))histList=[];}catch(e){histList=[];}
+function saveStorage(){try{localStorage.setItem('pxHist',JSON.stringify(histList));}catch(e){}}
+const fmt=(x,d)=>x.toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
+function getTick(price){if(price<10)return .01;if(price<50)return .05;if(price<100)return .1;if(price<500)return .5;if(price<1000)return 1;return 5;}
+function getAutoStep(P,t){const s=Math.ceil((P*.015)/t)*t;return s>0?s:t;}
+function makeRow(symbol,priceVal,pctVal,diffVal,shares,isLimit){
+ const r=document.createElement('div');r.className='rt'+(isLimit?' limit-row':'');
+ const sign=diffVal>0?'+':'';
+ const pctStr=(pctVal>0?'+':'')+pctVal.toFixed(2)+'%';
+ const diffStr='('+sign+diffVal.toFixed(2)+')';
+ r.innerHTML='<span class="star">'+symbol+'</span><span class="v">'+fmt(priceVal,2)+'</span><span class="pct">'+pctStr+'<br><span style="font-size:11px;opacity:.8;">'+diffStr+'</span></span><span class="sh">'+shares+'股</span>';
+ return r;
+}
+function runCalc(){
+ const P=parseFloat(document.getElementById('px').value)||0;
+ const budget=parseFloat(document.getElementById('cap').value)||5000;
+ const cd=document.getElementById('cd'),cu=document.getElementById('cu');
+ cd.innerHTML='';cu.innerHTML='';
+ if(P<=0){document.getElementById('stepInfo').textContent='間距: -';return;}
+ const t=getTick(P),stepVal=getAutoStep(P,t);
+ document.getElementById('stepInfo').textContent='間距: ±'+fmt(stepVal,t<1?2:0);
+ const buyItems=[],sellItems=[];
+ for(let i=1;i<=5;i++){
+  const tgtD=Math.round((P-stepVal*i)/t)*t;
+  const tgtU=Math.round((P+stepVal*i)/t)*t;
+  buyItems.push({symbol:NUM_ICONS[i-1],price:tgtD,pct:((tgtD-P)/P)*100,diff:tgtD-P});
+  sellItems.push({symbol:NUM_ICONS[i-1],price:tgtU,pct:((tgtU-P)/P)*100,diff:tgtU-P});
+ }
+ buyItems.sort((a,b)=>b.price-a.price);sellItems.sort((a,b)=>a.price-b.price);
+ buyItems.forEach(item=>cd.appendChild(makeRow(item.symbol,item.price,item.pct,item.diff,Math.floor(budget/item.price),false)));
+ sellItems.forEach(item=>cu.appendChild(makeRow(item.symbol,item.price,item.pct,item.diff,Math.floor(budget/item.price),false)));
+ const limitDown=Math.round((P*.90)/t)*t,limitUp=Math.round((P*1.10)/t)*t;
+ cd.appendChild(makeRow('★',limitDown,-10,limitDown-P,Math.floor(budget/limitDown),true));
+ cu.appendChild(makeRow('★',limitUp,10,limitUp-P,Math.floor(budget/limitUp),true));
+ const B=Math.ceil(P/10)*10;
+ const dD=Math.ceil(B*(2*FEE+.0015)/t)*t,dN=Math.ceil(B*(2*FEE+.003)/t)*t;
+ const digits=t<1?2:1;
+ document.getElementById('beDd').textContent='+'+fmt(dD,digits);
+ document.getElementById('beNd').textContent='+'+fmt(dN,digits);
+ document.getElementById('beD').textContent=fmt(P+dD,digits);
+ document.getElementById('beN').textContent=fmt(P+dN,digits);
+ document.querySelectorAll('.hq').forEach(b=>b.classList.toggle('on',parseFloat(b.textContent)===P));
+}
+function renderHistory(){
+ const h=document.getElementById('hist');h.innerHTML='';
+ [...histList].sort((a,b)=>b-a).slice(0,12).forEach(v=>{
+  const b=document.createElement('button');b.type='button';b.className='hq';b.textContent=v;
+  b.onclick=()=>{document.getElementById('px').value=v;runCalc();};h.appendChild(b);
+ });
+}
+function recordPx(){
+ const v=parseFloat(document.getElementById('px').value)||0;
+ if(v>0&&!histList.includes(v)){histList.unshift(v);if(histList.length>12)histList.pop();saveStorage();renderHistory();}
+}
+document.getElementById('px').addEventListener('input',runCalc);
+document.getElementById('px').addEventListener('focus',e=>e.target.select());
+document.getElementById('cap').addEventListener('input',runCalc);
+document.getElementById('btnSearch').onclick=recordPx;
+document.getElementById('btnTrash').onclick=()=>{
+ if(!confirm('確定清空這台裝置上的股價歷史紀錄？'))return;
+ histList=[];localStorage.removeItem('pxHist');renderHistory();
+ document.getElementById('px').value='116.0';runCalc();
+};
+renderHistory();runCalc();
+</script>
+</body>
+</html>
