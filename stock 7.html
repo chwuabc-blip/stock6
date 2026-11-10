@@ -7,7 +7,11 @@
 <meta name="theme-color" content="#0D1512">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>贏麻神器 PRO V6.4 - 多股票盤中工作台</title>
+<meta name="apple-mobile-web-app-title" content="贏麻神器">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<title>贏麻神器 PRO V7.2</title>
 <style>
 :root{
   --bg:#0D1512; --card:#15201B; --card2:#1B2922; --line:#2A3D33;
@@ -397,7 +401,7 @@ body{ display:flex; align-items:flex-start; justify-content:center; padding:6px;
 <div class="app">
   <div class="hdr">
     <div class="hdr-left">
-      <h1>⚡ 贏麻神器 Pro <span style="font-size:11px; color:var(--sub);">V7.1</span></h1>
+      <h1>⚡ 贏麻神器 Pro <span style="font-size:11px; color:var(--sub);">V7.2</span></h1>
       <div class="io-btns">
         <button class="io-btn" onclick="exportData()">📤 匯出</button>
         <button class="io-btn" onclick="importDataClick()">📥 匯入</button>
@@ -717,7 +721,9 @@ function stockDisplayLabel(code){
 function renderStockSelect(){
   const sel=$('stockSelect'); if(!sel) return;
   if(!sel.matches(':focus')) sel.value=stockDisplayLabel(curCode);
-  const menu=$('stockMenu'); if(menu) renderStockMenu('');
+  // 一般畫面重繪不可主動展開選股清單；只有清單原本開啟時才同步內容。
+  const menu=$('stockMenu');
+  if(menu?.classList.contains('open')) renderStockMenu(sel.matches(':focus')?sel.value:'');
 }
 function renderStockMenu(query){
   const menu=$('stockMenu'); if(!menu)return;
@@ -2040,6 +2046,16 @@ run();
 
 try{renderV55();}catch(e){console.warn("V6.1多股票工作台初始化失敗",e);}
 </script>
+
+<script>
+// V7.2 PWA：註冊離線快取；不改動交易資料與計算邏輯
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', { scope: './', updateViaCache: 'none' })
+      .catch(err => console.warn('PWA service worker registration failed:', err));
+  });
+}
+</script>
 </body>
 </html>
 <style>
@@ -2114,7 +2130,7 @@ try{renderV55();}catch(e){console.warn("V6.1多股票工作台初始化失敗",e
 </style>
 
 <style>
-/* V7.1：輸入即篩選清單，選取後顯示代號＋名稱 */
+/* V7.1.1：輸入即篩選；一般重繪不自動打開選股清單 */
 .stk-info .stock-combo{position:relative;display:flex;align-items:stretch;width:190px;max-width:48vw;height:34px;flex:0 1 190px;min-width:0;box-sizing:border-box}
 .stk-info .stock-combo #stockSelect{width:100%!important;max-width:none!important;min-width:0;height:34px;box-sizing:border-box;padding:6px 28px 6px 8px!important;border:1px solid var(--line);border-radius:5px;background:#0F1814;color:var(--txt);font-size:14px;font-weight:900;outline:none}
 .stock-combo-arrow{position:absolute;right:1px;top:1px;width:27px;height:32px;border:0;border-left:1px solid var(--line);border-radius:0 4px 4px 0;background:#17231d;color:var(--txt);font-size:17px;cursor:pointer}
