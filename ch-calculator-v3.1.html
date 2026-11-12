@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>贏麻神器<sup class="reg">®</sup>－超級計算機</title>
+<meta name="theme-color" content="#121815">
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#121815;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:10px;display:flex;justify-content:center;align-items:flex-start}
+.app-card{width:100%;max-width:880px;background:#1A231E;border:1px solid #2A372F;border-radius:18px;padding:14px;box-shadow:0 12px 35px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:11px}
+.top-tools{display:flex;align-items:center;justify-content:flex-start}
+.toggle{border:1px solid #3E8E63;background:#22382C;color:#7DD9A2;border-radius:9px;padding:8px 13px;font-size:14px;font-weight:800;cursor:pointer}
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 3px}
+.app-title{font-size:clamp(17px,4vw,22px);font-weight:900;color:#58C186;letter-spacing:.4px;white-space:nowrap}.app-title .reg{font-size:.48em;vertical-align:super;line-height:0;margin-left:1px}
+.sys-info{display:flex;align-items:center;gap:6px;background:#222F28;padding:6px 8px;border-radius:10px;border:1px solid #3A4F42;font-size:14px;font-weight:800;color:#93A89A}
+.sys-info input{width:76px;min-width:0;background:#161E1A;border:1px solid #3A4F42;border-radius:6px;color:#E2E8F0;font-size:16px;font-weight:900;text-align:center;padding:5px 3px;outline:none}
+.sys-info input:focus{border-color:#58C186}
+.cap-btn{border:1px solid #3E8E63;background:#22382C;color:#7DD9A2;border-radius:7px;padding:6px 8px;font-size:13px;font-weight:900;white-space:nowrap}
+.price-card{background:#222F28;border:1px solid #3A4F42;border-radius:14px;padding:11px}
+.pxrow{display:flex;gap:8px;align-items:center}
+.px{width:100%;min-width:0;border:2px solid #3A4F42;border-radius:12px;background:#161E1A;color:#FFF;text-align:center;font-size:clamp(34px,8vw,48px);font-weight:900;padding:5px;outline:none;letter-spacing:1px}
+.px:focus{border-color:#58C186;box-shadow:0 0 12px rgba(88,193,134,.25)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.col{border-radius:14px;padding:8px;min-width:0}
+.col.g{background:rgba(62,142,99,.08);border:1px solid rgba(62,142,99,.3)}
+.col.r{background:rgba(178,69,58,.08);border:1px solid rgba(178,69,58,.3)}
+.rt{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,.72fr);align-items:center;gap:3px;padding:10px 2px;border-radius:8px}
+.rt+.rt{border-top:1px dashed #3A4F42}
+.rt .star{font-size:14px;text-align:left;font-weight:bold}
+.col.g .rt .star{color:#58C186}.col.r .rt .star{color:#E2604F}
+.rt .level-price{display:flex;align-items:baseline;gap:3px;min-width:0;text-align:left;overflow:hidden}.rt .level-price .star{flex:0 0 auto;font-size:13px;font-weight:900;line-height:1.25}.rt .level-price .price-stack{display:flex;flex-direction:row;align-items:baseline;gap:2px;min-width:0;white-space:nowrap}.rt .v{font-size:clamp(12px,3.2vw,17px);font-weight:900;white-space:nowrap;line-height:1.2}.rt .custom-note{display:none}
+.col.g .v{color:#58C186}.col.r .v{color:#E2604F}
+.rt .pct{font-size:11px;color:#93A89A;font-weight:700;text-align:left;line-height:1.25;white-space:nowrap;min-width:0}
+.rt .sh{font-size:12px;font-weight:800;text-align:left;padding-left:1px;color:#E2E8F0;white-space:nowrap;min-width:0}
+.limit-row .star{color:#FACC15!important}.custom-tag{font-size:11px;font-weight:800;margin-left:4px;white-space:nowrap}.col.g .custom-tag{color:#58C186}.col.r .custom-tag{color:#E2604F}
+.extra-toggle{width:100%;border:1px dashed #496354;background:#1D2A22;color:#A7C9B2;border-radius:9px;padding:8px;font-weight:800;font-size:13px}
+.quick{background:#222F28;border:1px solid #3A4F42;border-radius:14px;padding:12px}
+.quick-head{display:flex;align-items:center;gap:8px;color:#A9C5B1;font-size:14px;font-weight:800;margin-bottom:8px}
+.quick-inputs{display:flex;align-items:center;gap:8px}
+.quick-price{flex:1;min-width:0;background:#161E1A;border:1px solid #3A4F42;border-radius:9px;color:#FFF;text-align:center;font-size:25px;font-weight:900;padding:8px}
+.quick-result{min-width:90px;text-align:center;color:#FFF;font-size:25px;font-weight:900}
+.quick-result small{display:block;color:#93A89A;font-size:11px;font-weight:700}
+.be{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.be .c{background:#222F28;border:1px solid #3A4F42;border-radius:12px;padding:11px 12px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.lbl{font-size:13px;color:#93A89A;font-weight:700;white-space:nowrap}
+.lbl span{color:#58C186;margin-left:4px;font-size:12px}
+.val{font-size:clamp(16px,4vw,20px);font-weight:900;color:#FFF;white-space:nowrap}
+.targets{background:#222F28;border:1px solid #3A4F42;border-radius:12px;padding:10px}
+.targets-title{font-size:13px;color:#93A89A;font-weight:800;margin:0 0 8px 2px}
+.target-row{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.target-row::-webkit-scrollbar{display:none}
+.target-btn{flex:0 0 auto;min-width:38px;border:1px solid #3A4F42;background:#161E1A;color:#CBD5E1;border-radius:8px;padding:8px 7px;font-weight:800}
+.target-btn.active{border-color:#58C186;background:#22382C;color:#7DD9A2}
+.custom-wrap{display:flex;gap:5px;margin-top:0;flex:0 0 auto;align-items:center}
+.custom-wrap input{width:58px;min-width:0;background:#161E1A;border:1px solid #3A4F42;border-radius:8px;color:white;text-align:center;padding:8px 3px;font-size:14px}
+.custom-wrap button{border:1px solid #3E8E63;background:#22382C;color:#7DD9A2;border-radius:8px;padding:8px 9px;font-weight:800}
+[hidden]{display:none!important}
+@media(max-width:430px){body{padding:6px}.app-card{padding:10px;gap:9px}.header-row{align-items:flex-start}.sys-info{gap:4px;padding:5px;font-size:12px}.sys-info input{width:62px;font-size:14px}.cap-btn{font-size:12px;padding:6px}.col{padding:6px}.rt{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,.72fr);gap:2px;padding:9px 1px}.rt .level-price .star{font-size:12px}.rt .v{font-size:12px}.rt .pct{font-size:9px}.rt .sh{font-size:10px}.custom-tag{font-size:9px}.be{gap:6px}.be .c{padding:9px 7px}.lbl{font-size:11px}.lbl span{font-size:10px}.quick-result{min-width:75px;font-size:22px}}
+</style>
+</head>
+<body>
+<main class="app-card">
+  <div class="header-row">
+    <div class="app-title">贏麻神器<sup class="reg">®</sup>－超級計算機</div>
+    <div class="sys-info"><span>資金</span><input id="cap" type="number" inputmode="numeric" value="5000" min="1"><button class="cap-btn" id="cap10" type="button">＋10,000</button></div>
+  </div>
+  <div class="price-card"><div class="pxrow"><input id="px" class="px" type="number" inputmode="decimal" step="any" placeholder="輸入參考價" value="116"></div></div>
+  <button class="toggle" id="collapseBtn" type="button">收合網格 ▲</button>
+  <section id="gridArea">
+    <div class="cols"><div class="col g" id="cd"></div><div class="col r" id="cu"></div></div>
+  </section>
+  <section class="be">
+    <div class="c"><div class="lbl">當沖保本<span id="beDd">—</span></div><div class="val" id="beD">—</div></div>
+    <div class="c"><div class="lbl">隔日保本<span id="beNd">—</span></div><div class="val" id="beN">—</div></div>
+  </section>
+  <section class="targets"><div class="target-row">
+    <span class="targets-title" style="margin:0 2px 0 0;white-space:nowrap">自訂</span><button class="target-btn" data-pct="0.5">0.5%</button><button class="target-btn" data-pct="1">1%</button><button class="target-btn" data-pct="2">2%</button><button class="target-btn" data-pct="4">4%</button><div class="custom-wrap"><input id="customPct" type="number" inputmode="decimal" step="0.1" placeholder="%"><button id="applyCustom" type="button">✓</button></div>
+  </div></section>
+  <section class="quick"><div class="quick-head"><span>🧮</span></div><div class="quick-inputs"><input id="quickPrice" class="quick-price" type="number" inputmode="decimal" step="any" placeholder="價格"><div class="quick-result"><span id="quickShares">—</span><small>股</small></div></div></section>
+</main>
+<script>
+const FEE=0.001425*0.28,icons=['①','②','③','④','⑤'];let gridCollapsed=false,selectedPct=0;
+const $=id=>document.getElementById(id),fmt=(n,d=2)=>Number(n).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
+function tick(p){if(p<10)return .01;if(p<50)return .05;if(p<100)return .1;if(p<500)return .5;if(p<1000)return 1;return 5}
+function snap(p,mode='nearest'){if(!(p>0))return 0;let x=p;for(let i=0;i<5;i++){const t=tick(x),q=x/t,n=mode==='floor'?Math.floor(q+1e-8):mode==='ceil'?Math.ceil(q-1e-8):Math.round(q),y=Number((n*t).toFixed(2));if(Math.abs(tick(y)-t)<1e-9)return y;x=y}const t=tick(x);return Number((Math.round(x/t)*t).toFixed(2))}
+function makeRow(symbol,price,base,shares,limit=false,customPct=''){const row=document.createElement('div');row.className='rt'+(limit?' limit-row':'');const pct=(price-base)/base*100,diff=price-base;const mark=symbol==='▼'||symbol==='▲';const level=mark?symbol:symbol;const note='';row.innerHTML='<div class="level-price"><span class="star">'+level+'</span><span class="price-stack"><span class="v">'+fmt(price)+'</span>'+note+'</span></div><span class="pct">'+(pct>=0?'+':'')+pct.toFixed(2)+'%<br><span style="font-size:10px;opacity:.8">('+(diff>=0?'+':'')+fmt(diff)+')</span></span><span class="sh">'+shares+'股</span>';return row}
+function buildSide(el,base,items,budget){el.innerHTML='';items.forEach(it=>el.appendChild(makeRow(it.symbol,it.price,base,Math.floor(budget/it.price),!!it.limit,it.customPct||'')))}
+function calcQuick(){const p=Number($('quickPrice').value),cap=Number($('cap').value)||0;$('quickShares').textContent=p>0?Math.floor(cap/p).toLocaleString('zh-TW'):'—'}
+function runCalc(){const P=Number($('px').value),budget=Math.max(0,Number($('cap').value)||0);if(!(P>0)){$('cd').innerHTML='';$('cu').innerHTML='';$('quickShares').textContent='—';return}
+ const step=Math.ceil(P*.015/tick(P))*tick(P),buys=[],sells=[];
+ for(let i=1;i<=5;i++){buys.push({symbol:icons[i-1],price:snap(P-step*i)});sells.push({symbol:icons[i-1],price:snap(P+step*i)})}
+ if(selectedPct>0){const b=snap(P*(1-selectedPct/100)),s=snap(P*(1+selectedPct/100));if(b>0&&!buys.some(x=>x.price===b))buys.push({symbol:'▼',price:b,customPct:selectedPct});if(!sells.some(x=>x.price===s))sells.push({symbol:'▲',price:s,customPct:selectedPct})}
+ const down=snap(P*.9,'ceil'),up=snap(P*1.1,'floor');if(!buys.some(x=>x.price===down))buys.push({symbol:'★',price:down,limit:true});if(!sells.some(x=>x.price===up))sells.push({symbol:'★',price:up,limit:true});
+ buys.sort((a,b)=>b.price-a.price);sells.sort((a,b)=>a.price-b.price);buildSide($('cd'),P,buys,budget);buildSide($('cu'),P,sells,budget);
+ const t=tick(P),B=Math.ceil(P/10)*10,dD=Math.ceil(B*(2*FEE+.0015)/t)*t,dN=Math.ceil(B*(2*FEE+.003)/t)*t;$('beDd').textContent='+'+fmt(dD,t<1?2:1);$('beNd').textContent='+'+fmt(dN,t<1?2:1);$('beD').textContent=fmt(P+dD,t<1?2:1);$('beN').textContent=fmt(P+dN,t<1?2:1);calcQuick()}
+$('px').addEventListener('input',runCalc);$('cap').addEventListener('input',runCalc);$('quickPrice').addEventListener('input',calcQuick);
+$('cap10').onclick=()=>{$('cap').value=10000;runCalc()};
+$('collapseBtn').onclick=()=>{gridCollapsed=!gridCollapsed;$('gridArea').hidden=gridCollapsed;$('collapseBtn').textContent=gridCollapsed?'展開網格 ▼':'收合網格 ▲'};
+document.querySelectorAll('[data-pct]').forEach(b=>b.onclick=()=>{selectedPct=Number(b.dataset.pct);document.querySelectorAll('[data-pct]').forEach(x=>x.classList.toggle('active',x===b));runCalc()});
+$('applyCustom').onclick=()=>{const p=Number($('customPct').value);if(p>0&&p<10){selectedPct=p;document.querySelectorAll('[data-pct]').forEach(x=>x.classList.remove('active'));runCalc()}};
+runCalc();
+</script>
+</body></html>
