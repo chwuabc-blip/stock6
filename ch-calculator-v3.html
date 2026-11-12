@@ -27,15 +27,15 @@ body{padding:10px;display:flex;justify-content:center;align-items:flex-start}
 .col{border-radius:14px;padding:8px;min-width:0}
 .col.g{background:rgba(62,142,99,.08);border:1px solid rgba(62,142,99,.3)}
 .col.r{background:rgba(178,69,58,.08);border:1px solid rgba(178,69,58,.3)}
-.rt{display:grid;grid-template-columns:26px minmax(0,1fr) minmax(48px,76px) minmax(38px,54px);align-items:center;gap:2px;padding:10px 1px;border-radius:8px}
+.rt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:4px;padding:10px 2px;border-radius:8px}
 .rt+.rt{border-top:1px dashed #3A4F42}
-.rt .star{font-size:14px;text-align:center;font-weight:bold}
+.rt .star{font-size:14px;text-align:left;font-weight:bold}
 .col.g .rt .star{color:#58C186}.col.r .rt .star{color:#E2604F}
 .rt .v{font-size:clamp(14px,3.5vw,18px);font-weight:900;padding-left:2px;white-space:nowrap}
 .col.g .v{color:#58C186}.col.r .v{color:#E2604F}
-.rt .pct{font-size:12px;color:#93A89A;font-weight:700;text-align:center;line-height:1.3;white-space:nowrap}
-.rt .sh{font-size:13px;font-weight:800;text-align:right;padding-right:2px;color:#E2E8F0;white-space:nowrap}
-.limit-row .star{color:#FACC15!important}
+.rt .pct{font-size:12px;color:#93A89A;font-weight:700;text-align:left;line-height:1.3;white-space:nowrap}
+.rt .sh{font-size:13px;font-weight:800;text-align:left;padding-left:2px;color:#E2E8F0;white-space:nowrap}
+.limit-row .star{color:#FACC15!important}.custom-tag{font-size:11px;font-weight:800;margin-left:4px;white-space:nowrap}.col.g .custom-tag{color:#58C186}.col.r .custom-tag{color:#E2604F}
 .extra-toggle{width:100%;border:1px dashed #496354;background:#1D2A22;color:#A7C9B2;border-radius:9px;padding:8px;font-weight:800;font-size:13px}
 .quick{background:#222F28;border:1px solid #3A4F42;border-radius:14px;padding:12px}
 .quick-head{display:flex;align-items:center;gap:8px;color:#A9C5B1;font-size:14px;font-weight:800;margin-bottom:8px}
@@ -57,21 +57,19 @@ body{padding:10px;display:flex;justify-content:center;align-items:flex-start}
 .custom-wrap input{width:100px;min-width:0;background:#161E1A;border:1px solid #3A4F42;border-radius:8px;color:white;text-align:center;padding:8px;font-size:15px}
 .custom-wrap button{border:1px solid #3E8E63;background:#22382C;color:#7DD9A2;border-radius:8px;padding:7px 12px;font-weight:800}
 [hidden]{display:none!important}
-@media(max-width:430px){body{padding:6px}.app-card{padding:10px;gap:9px}.header-row{align-items:flex-start}.sys-info{gap:4px;padding:5px;font-size:12px}.sys-info input{width:62px;font-size:14px}.cap-btn{font-size:12px;padding:6px}.col{padding:6px}.rt{grid-template-columns:22px minmax(0,1fr) 47px 36px;gap:1px;padding:9px 0}.rt .pct{font-size:10px}.rt .sh{font-size:11px}.be{gap:6px}.be .c{padding:9px 7px}.lbl{font-size:11px}.lbl span{font-size:10px}.quick-result{min-width:75px;font-size:22px}}
+@media(max-width:430px){body{padding:6px}.app-card{padding:10px;gap:9px}.header-row{align-items:flex-start}.sys-info{gap:4px;padding:5px;font-size:12px}.sys-info input{width:62px;font-size:14px}.cap-btn{font-size:12px;padding:6px}.col{padding:6px}.rt{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;padding:9px 1px}.rt .v{font-size:13px}.rt .pct{font-size:10px}.rt .sh{font-size:11px}.custom-tag{font-size:9px}.be{gap:6px}.be .c{padding:9px 7px}.lbl{font-size:11px}.lbl span{font-size:10px}.quick-result{min-width:75px;font-size:22px}}
 </style>
 </head>
 <body>
 <main class="app-card">
-  <div class="top-tools"><button class="toggle" id="collapseBtn" type="button">收合網格 ▲</button></div>
   <div class="header-row">
-    <div class="app-title">贏麻神器®－超級計算機</div>
+    <div class="app-title">贏麻神器<sup class="reg">®</sup>－超級計算機</div>
     <div class="sys-info"><span>資金</span><input id="cap" type="number" inputmode="numeric" value="5000" min="1"><button class="cap-btn" id="cap10" type="button">＋10,000</button></div>
   </div>
   <div class="price-card"><div class="pxrow"><input id="px" class="px" type="number" inputmode="decimal" step="any" placeholder="輸入參考價" value="116"></div></div>
+  <button class="toggle" id="collapseBtn" type="button">收合網格 ▲</button>
   <section id="gridArea">
     <div class="cols"><div class="col g" id="cd"></div><div class="col r" id="cu"></div></div>
-    <button class="extra-toggle" id="extraBtn" type="button" style="margin-top:8px">＋ 展開漲跌停價</button>
-    <div class="cols" id="limitArea" hidden style="margin-top:6px"><div class="col g" id="limitD"></div><div class="col r" id="limitU"></div></div>
   </section>
   <section class="quick"><div class="quick-head"><span>🧮</span><span>快速股數試算</span></div><div class="quick-inputs"><input id="quickPrice" class="quick-price" type="number" inputmode="decimal" step="any" placeholder="輸入價格"><div class="quick-result"><span id="quickShares">—</span><small>股數</small></div></div></section>
   <section class="be">
@@ -83,24 +81,23 @@ body{padding:10px;display:flex;justify-content:center;align-items:flex-start}
   </div><div class="custom-wrap"><input id="customPct" type="number" inputmode="decimal" step="0.1" placeholder="自訂 %"><button id="applyCustom" type="button">套用</button></div></section>
 </main>
 <script>
-const FEE=0.001425*0.28,icons=['①','②','③','④','⑤'];let extraOpen=false,gridCollapsed=false,selectedPct=0;
+const FEE=0.001425*0.28,icons=['①','②','③','④','⑤'];let gridCollapsed=false,selectedPct=0;
 const $=id=>document.getElementById(id),fmt=(n,d=2)=>Number(n).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
 function tick(p){if(p<10)return .01;if(p<50)return .05;if(p<100)return .1;if(p<500)return .5;if(p<1000)return 1;return 5}
 function snap(p,mode='nearest'){if(!(p>0))return 0;let x=p;for(let i=0;i<5;i++){const t=tick(x),q=x/t,n=mode==='floor'?Math.floor(q+1e-8):mode==='ceil'?Math.ceil(q-1e-8):Math.round(q),y=Number((n*t).toFixed(2));if(Math.abs(tick(y)-t)<1e-9)return y;x=y}const t=tick(x);return Number((Math.round(x/t)*t).toFixed(2))}
-function makeRow(symbol,price,base,shares,limit=false){const row=document.createElement('div');row.className='rt'+(limit?' limit-row':'');const pct=(price-base)/base*100,diff=price-base;row.innerHTML='<span class="star">'+symbol+'</span><span class="v">'+fmt(price)+'</span><span class="pct">'+(pct>=0?'+':'')+pct.toFixed(2)+'%<br><span style="font-size:10px;opacity:.8">('+(diff>=0?'+':'')+fmt(diff)+')</span></span><span class="sh">'+shares+'股</span>';return row}
-function buildSide(el,base,items,budget){el.innerHTML='';items.forEach(it=>el.appendChild(makeRow(it.symbol,it.price,base,Math.floor(budget/it.price))))}
+function makeRow(symbol,price,base,shares,limit=false,customPct=''){const row=document.createElement('div');row.className='rt'+(limit?' limit-row':'');const pct=(price-base)/base*100,diff=price-base;const mark=symbol==='▼'||symbol==='▲';const marker=mark?'<span class="custom-tag">'+symbol+' 自訂 '+customPct+'%</span>':'';row.innerHTML='<span class="star">'+(mark?'':symbol)+'</span><span class="v">'+fmt(price)+marker+'</span><span class="pct">'+(pct>=0?'+':'')+pct.toFixed(2)+'%<br><span style="font-size:10px;opacity:.8">('+(diff>=0?'+':'')+fmt(diff)+')</span></span><span class="sh">'+shares+'股</span>';return row}
+function buildSide(el,base,items,budget){el.innerHTML='';items.forEach(it=>el.appendChild(makeRow(it.symbol,it.price,base,Math.floor(budget/it.price),!!it.limit,it.customPct||'')))}
 function calcQuick(){const p=Number($('quickPrice').value),cap=Number($('cap').value)||0;$('quickShares').textContent=p>0?Math.floor(cap/p).toLocaleString('zh-TW'):'—'}
-function runCalc(){const P=Number($('px').value),budget=Math.max(0,Number($('cap').value)||0);if(!(P>0)){$('cd').innerHTML='';$('cu').innerHTML='';$('limitD').innerHTML='';$('limitU').innerHTML='';$('quickShares').textContent='—';return}
+function runCalc(){const P=Number($('px').value),budget=Math.max(0,Number($('cap').value)||0);if(!(P>0)){$('cd').innerHTML='';$('cu').innerHTML='';$('quickShares').textContent='—';return}
  const step=Math.ceil(P*.015/tick(P))*tick(P),buys=[],sells=[];
  for(let i=1;i<=5;i++){buys.push({symbol:icons[i-1],price:snap(P-step*i)});sells.push({symbol:icons[i-1],price:snap(P+step*i)})}
- if(selectedPct>0){const b=snap(P*(1-selectedPct/100)),s=snap(P*(1+selectedPct/100));if(b>0&&!buys.some(x=>x.price===b))buys.push({symbol:'◆',price:b});if(!sells.some(x=>x.price===s))sells.push({symbol:'◆',price:s})}
+ if(selectedPct>0){const b=snap(P*(1-selectedPct/100)),s=snap(P*(1+selectedPct/100));if(b>0&&!buys.some(x=>x.price===b))buys.push({symbol:'▼',price:b,customPct:selectedPct});if(!sells.some(x=>x.price===s))sells.push({symbol:'▲',price:s,customPct:selectedPct})}
+ const down=snap(P*.9,'ceil'),up=snap(P*1.1,'floor');if(!buys.some(x=>x.price===down))buys.push({symbol:'★',price:down,limit:true});if(!sells.some(x=>x.price===up))sells.push({symbol:'★',price:up,limit:true});
  buys.sort((a,b)=>b.price-a.price);sells.sort((a,b)=>a.price-b.price);buildSide($('cd'),P,buys,budget);buildSide($('cu'),P,sells,budget);
- const down=snap(P*.9,'ceil'),up=snap(P*1.1,'floor');$('limitD').innerHTML='';$('limitU').innerHTML='';$('limitD').appendChild(makeRow('★',down,P,Math.floor(budget/down),true));$('limitU').appendChild(makeRow('★',up,P,Math.floor(budget/up),true));
  const t=tick(P),B=Math.ceil(P/10)*10,dD=Math.ceil(B*(2*FEE+.0015)/t)*t,dN=Math.ceil(B*(2*FEE+.003)/t)*t;$('beDd').textContent='+'+fmt(dD,t<1?2:1);$('beNd').textContent='+'+fmt(dN,t<1?2:1);$('beD').textContent=fmt(P+dD,t<1?2:1);$('beN').textContent=fmt(P+dN,t<1?2:1);calcQuick()}
 $('px').addEventListener('input',runCalc);$('cap').addEventListener('input',runCalc);$('quickPrice').addEventListener('input',calcQuick);
 $('cap10').onclick=()=>{$('cap').value=10000;runCalc()};
 $('collapseBtn').onclick=()=>{gridCollapsed=!gridCollapsed;$('gridArea').hidden=gridCollapsed;$('collapseBtn').textContent=gridCollapsed?'展開網格 ▼':'收合網格 ▲'};
-$('extraBtn').onclick=()=>{extraOpen=!extraOpen;$('limitArea').hidden=!extraOpen;$('extraBtn').textContent=extraOpen?'－ 收合漲跌停價':'＋ 展開漲跌停價'};
 document.querySelectorAll('[data-pct]').forEach(b=>b.onclick=()=>{selectedPct=Number(b.dataset.pct);document.querySelectorAll('[data-pct]').forEach(x=>x.classList.toggle('active',x===b));runCalc()});
 $('applyCustom').onclick=()=>{const p=Number($('customPct').value);if(p>0&&p<10){selectedPct=p;document.querySelectorAll('[data-pct]').forEach(x=>x.classList.remove('active'));runCalc()}};
 runCalc();
