@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101713">
+<meta name="application-name" content="贏麻神器®－超級計算機">
+<title>贏麻神器®－超級計算機</title>
+<style>
+:root{color-scheme:dark;--bg:#101713;--panel:#19231d;--panel2:#202d25;--line:#34443a;--white:#f4f7f4;--muted:#9eafa3;--green:#67d391;--red:#ff7777;--gold:#d7b76b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:12px;display:flex;justify-content:center}
+button,input{font:inherit}
+.app{width:100%;max-width:900px;display:flex;flex-direction:column;gap:12px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:42px;height:42px;flex:none;border-radius:13px;background:linear-gradient(145deg,#26372d,#101713);border:1px solid #526454;display:grid;place-items:center;box-shadow:0 4px 15px #0008}
+.logo svg{width:27px;height:27px}
+h1{font-size:clamp(16px,3.2vw,22px);margin:0;font-weight:850;letter-spacing:.2px;white-space:nowrap}
+.capital{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.capital button,.pct button{border:1px solid var(--line);background:var(--panel);color:#c8d4cc;border-radius:9px;padding:9px 11px;font-weight:750;font-size:14px}
+.capital button.active,.pct button.active{background:#294333;border-color:var(--green);color:#fff;box-shadow:inset 0 0 0 1px #67d39144}
+.refbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px}
+.ref{width:100%;border:0;outline:0;background:transparent;color:#fff;text-align:center;font-size:clamp(38px,9vw,62px);font-weight:900;letter-spacing:.5px;padding:4px 0;min-width:0}
+.ref:focus{color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.side{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;min-width:0}
+.side.buy{border-top:3px solid var(--green)}
+.side.sell{border-top:3px solid var(--red)}
+.rows{padding:4px 9px 8px}
+.level{display:grid;grid-template-columns:27px minmax(0,1fr) auto;align-items:center;gap:4px;min-height:42px;border-bottom:1px solid #ffffff0d}
+.level:last-child{border-bottom:0}
+.no{font-size:14px;color:#aebbb2;text-align:center;font-weight:750}
+.price{font-size:clamp(15px,3.5vw,19px);font-weight:850;white-space:nowrap;letter-spacing:-.25px}
+.buy .price{color:var(--green)}
+.sell .price{color:var(--red)}
+.qty{font-size:14px;font-weight:800;color:#fff;white-space:nowrap;text-align:right}
+.qty small{font-size:10px;color:#fff;opacity:.9;margin-left:1px}
+.target-tag{font-size:10px;color:#c6d1c9;opacity:.8;margin-left:4px;font-weight:650}
+.limit{background:#ffffff08;border-radius:7px;padding:0 3px}
+.limit .no{color:var(--gold)}
+.more{display:block;width:100%;border:0;border-top:1px solid var(--line);background:#ffffff06;color:var(--muted);padding:8px;font-size:12px}
+.breaks{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.break{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.break span{font-size:12px;color:var(--muted);white-space:nowrap}
+.break strong{font-size:clamp(17px,4vw,22px);font-weight:900;color:#fff;white-space:nowrap}
+.pct{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pct button{min-width:53px;padding:8px 10px}
+.custom{display:flex;gap:5px;margin-left:auto}
+.custom input{width:70px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:9px;color:#fff;padding:8px;text-align:center;font-size:15px}
+.custom button{width:38px;border:1px solid #56725e;background:#263c2d;color:#fff;border-radius:9px;font-size:22px;font-weight:700}
+.quick{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
+.quick input{width:100%;min-width:0;background:#101913;border:1px solid #46584b;border-radius:11px;color:#fff;font-size:clamp(30px,7vw,43px);font-weight:900;text-align:center;padding:8px 5px;outline:none}
+.quick input:focus{border-color:var(--green);box-shadow:0 0 0 2px #67d39122}
+.result{min-width:92px;text-align:center}
+.result strong{display:block;color:#fff;font-size:clamp(29px,7vw,42px);line-height:1.05;font-weight:950}
+.result small{display:block;color:#fff;font-size:12px;margin-top:4px}
+@media(min-width:760px){body{padding:22px}.app{gap:14px}.grid{gap:14px}.rows{padding:7px 15px 12px}.level{min-height:48px}.price{font-size:21px}.qty{font-size:16px}.quick{padding:16px 20px}}
+@media(max-width:380px){body{padding:7px}.app{gap:8px}.top{gap:5px}.logo{width:36px;height:36px}.logo svg{width:23px}.capital{gap:3px}.capital button{padding:7px 7px;font-size:12px}.grid{gap:6px}.rows{padding:3px 5px 6px}.level{grid-template-columns:22px minmax(0,1fr) auto;min-height:38px;gap:2px}.price{font-size:14px}.qty{font-size:12px}.break{padding:9px 7px}.break span{font-size:11px}.custom input{width:57px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <rect x="5" y="3.5" width="22" height="25" rx="4" stroke="#d9e6dc" stroke-width="1.6"/>
+          <path d="M10 9h12M10 14h3m3 0h3m3 0h0M10 19h3m3 0h3m3 0h0M10 24h3m3 0h3" stroke="#70d99a" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>贏麻神器®－超級計算機</h1>
+    </div>
+    <div class="capital" id="capital">
+      <button data-cap="2500">2,500</button>
+      <button data-cap="5000" class="active">5,000</button>
+      <button data-cap="7500">7,500</button>
+      <button data-cap="10000">10,000</button>
+    </div>
+  </header>
+
+  <section class="refbox">
+    <input id="refPrice" class="ref" type="number" inputmode="decimal" step="any" value="116" aria-label="參考價格">
+  </section>
+
+  <section class="grid" aria-label="價格網格">
+    <div class="side buy"><div class="rows" id="buyRows"></div></div>
+    <div class="side sell"><div class="rows" id="sellRows"></div></div>
+  </section>
+
+  <section class="breaks">
+    <div class="break"><span>當沖保本</span><strong id="dayBE">—</strong></div>
+    <div class="break"><span>隔日保本</span><strong id="swingBE">—</strong></div>
+  </section>
+
+  <section class="pct" id="percentages">
+    <button data-pct="0.5">0.5%</button>
+    <button data-pct="1">1%</button>
+    <button data-pct="2">2%</button>
+    <button data-pct="4">4%</button>
+    <div class="custom">
+      <input id="customPct" type="number" inputmode="decimal" min="0.01" max="50" step="0.1" placeholder="自選%">
+      <button id="addPct" type="button" aria-label="加入百分比">＋</button>
+    </div>
+  </section>
+
+  <section class="quick">
+    <input id="quickPrice" type="number" inputmode="decimal" step="any" placeholder="—" aria-label="快速試算價格">
+    <div class="result"><strong id="quickShares">—</strong><small>股</small></div>
+  </section>
+</main>
+<script>
+(() => {
+  const FEE = 0.001425 * 0.28;
+  const selectedPct = new Set();
+  let capital = 5000;
+  let expanded = true;
+  const $ = id => document.getElementById(id);
+  const fmt = n => Number(n).toFixed(n < 10 ? 2 : n < 100 ? 2 : n < 1000 ? 1 : 0);
+  const tick = p => p < 10 ? .01 : p < 50 ? .05 : p < 100 ? .1 : p < 500 ? .5 : p < 1000 ? 1 : 5;
+
+  function legalRound(p) {
+    if (!(p > 0)) return 0;
+    const t = tick(p);
+    return Math.round((p + 1e-9) / t) * t;
+  }
+  function limitPrice(raw, upper) {
+    let p = raw;
+    for (let i = 0; i < 20; i++) {
+      const t = tick(p);
+      const next = (upper ? Math.floor((raw + 1e-8) / t) : Math.ceil((raw - 1e-8) / t)) * t;
+      if (Math.abs(next - p) < 1e-8) return Number(next.toFixed(2));
+      p = next;
+    }
+    return Number(p.toFixed(2));
+  }
+  function shares(price) { return price > 0 ? Math.floor(capital / price) : 0; }
+  function priceDigits(p) { return tick(p) < 1 ? 2 : 0; }
+
+  function makeRows(side, reference, step) {
+    const isBuy = side === 'buy';
+    const items = [];
+    for (let i = 1; i <= 5; i++) {
+      const raw = reference + (isBuy ? -1 : 1) * step * i;
+      const p = legalRound(raw);
+      if (p > 0) items.push({price:p, no:['①','②','③','④','⑤'][i-1], key:'base'+i, sort:isBuy?-p:p});
+    }
+    for (const pct of selectedPct) {
+      const raw = reference * (1 + (isBuy ? -1 : 1) * pct / 100);
+      const p = legalRound(raw);
+      if (p > 0) items.push({price:p, no:'·', key:'pct'+pct, pct:pct, sort:isBuy?-p:p});
+    }
+    const lim = limitPrice(reference * (isBuy ? .9 : 1.1), !isBuy);
+    if (lim > 0) items.push({price:lim,no:'★',key:'limit',limit:true,sort:isBuy?-lim:lim});
+    items.sort((a,b)=>a.sort-b.sort || (a.limit?1:-1));
+    const unique = [];
+    const seen = new Set();
+    for (const item of items) {
+      const k = item.price.toFixed(2);
+      if (seen.has(k)) continue;
+      seen.add(k); unique.push(item);
+    }
+    return unique;
+  }
+
+  function renderSide(el, items, side) {
+    el.innerHTML = '';
+    const visible = expanded ? items : items.filter((x,i) => x.limit ? false : (x.key.startsWith('base') ? Number(x.key.slice(4)) <= 3 : true));
+    for (const item of visible) {
+      const row = document.createElement('div');
+      row.className = 'level' + (item.limit ? ' limit' : '');
+      const no = document.createElement('span'); no.className='no'; no.textContent=item.no;
+      const price = document.createElement('span'); price.className='price'; price.textContent=fmt(item.price);
+      if (item.pct) { const tag=document.createElement('small'); tag.className='target-tag'; tag.textContent=item.pct+'%'; price.appendChild(tag); }
+      const qty = document.createElement('span'); qty.className='qty'; qty.textContent=shares(item.price).toLocaleString('zh-TW');
+      const unit = document.createElement('small'); unit.textContent='股'; qty.appendChild(unit);
+      row.append(no,price,qty); el.appendChild(row);
+    }
+    const toggle = document.createElement('button');
+    toggle.type='button'; toggle.className='more'; toggle.textContent=expanded?'收合':'展開';
+    toggle.addEventListener('click',()=>{expanded=!expanded;run();});
+    el.appendChild(toggle);
+  }
+
+  function run() {
+    const ref = Number($('refPrice').value);
+    const quick = Number($('quickPrice').value);
+    if (!(ref > 0)) {
+      $('buyRows').innerHTML=''; $('sellRows').innerHTML='';
+      $('dayBE').textContent='—'; $('swingBE').textContent='—';
+    } else {
+      const t = tick(ref);
+      const step = Math.ceil((ref * .015 - 1e-9) / t) * t;
+      renderSide($('buyRows'), makeRows('buy',ref,step),'buy');
+      renderSide($('sellRows'), makeRows('sell',ref,step),'sell');
+      const base = Math.ceil(ref/10)*10;
+      const dayAdd = Math.ceil((base*(2*FEE+.0015))/t)*t;
+      const swingAdd = Math.ceil((base*(2*FEE+.003))/t)*t;
+      $('dayBE').textContent=fmt(ref+dayAdd);
+      $('swingBE').textContent=fmt(ref+swingAdd);
+    }
+    $('quickShares').textContent=quick>0?shares(quick).toLocaleString('zh-TW'):'—';
+  }
+
+  $('capital').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-cap]'); if(!b)return;
+    capital=Number(b.dataset.cap);
+    $('capital').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
+    run();
+  });
+  $('refPrice').addEventListener('input',run);
+  $('quickPrice').addEventListener('input',run);
+  $('percentages').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-pct]'); if(!b)return;
+    const p=Number(b.dataset.pct);
+    selectedPct.has(p)?selectedPct.delete(p):selectedPct.add(p);
+    b.classList.toggle('active',selectedPct.has(p));
+    run();
+  });
+  $('addPct').addEventListener('click',()=>{
+    const p=Number($('customPct').value);
+    if(!(p>0&&p<=50))return;
+    selectedPct.add(p);
+    const existing=[...$('percentages').querySelectorAll('button[data-pct]')].find(b=>Number(b.dataset.pct)===p);
+    if(!existing){
+      const b=document.createElement('button'); b.dataset.pct=String(p); b.textContent=p+'%'; b.classList.add('active');
+      $('percentages').insertBefore(b,$('percentages').querySelector('.custom'));
+    } else existing.classList.add('active');
+    $('customPct').value=''; run();
+  });
+  $('customPct').addEventListener('keydown',e=>{if(e.key==='Enter')$('addPct').click();});
+  run();
+})();
+</script>
+</body>
+</html>
