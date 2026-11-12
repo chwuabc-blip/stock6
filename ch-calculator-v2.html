@@ -89,6 +89,11 @@ h1{font-size:clamp(16px,3.2vw,22px);margin:0;font-weight:850;letter-spacing:.2px
     <div class="side sell"><div class="rows" id="sellRows"></div></div>
   </section>
 
+  <section class="quick">
+    <input id="quickPrice" type="number" inputmode="decimal" step="any" placeholder="—" aria-label="快速試算價格">
+    <div class="result"><strong id="quickShares">—</strong><small>股</small></div>
+  </section>
+
   <section class="breaks">
     <div class="break"><span>當沖保本</span><strong id="dayBE">—</strong></div>
     <div class="break"><span>隔日保本</span><strong id="swingBE">—</strong></div>
