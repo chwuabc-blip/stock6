@@ -805,7 +805,7 @@ function buildGridPrices(first,limit,dir,spacing){
   if(!(dir==='buy'?first>limit+EPS:first<limit-EPS))return out;
   out.push(first);
   for(let i=1;i<=4;i++){
-    const p=v55RoundTick(first+sign*spacing*i,dir==='buy'?'down':'up');
+    const p=Number((first+sign*spacing*i).toFixed(2));
     if(!inside(p)||Math.abs(p-out[out.length-1])<EPS)break;
     out.push(p);
   }
@@ -1107,13 +1107,16 @@ function run(){
   const sellFirst=gridFirstPrice(P,firstPct,'sell');
   const commonTick=Math.max(commonGridTick(buyFirst,limD),commonGridTick(sellFirst,limU));
   const shortestRange=Math.min(Math.max(0,buyFirst-limD),Math.max(0,limU-sellFirst));
-  let spacing=Math.max(commonTick,Math.round((shortestRange/5)/commonTick)*commonTick);
+  let spacing=Math.round((shortestRange/5)/commonTick)*commonTick;
   spacing=Number(spacing.toFixed(2));
   while(spacing*4>=shortestRange-EPS && spacing>commonTick+EPS){
     spacing=Number((spacing-commonTick).toFixed(2));
   }
-  const buyPrices=buildGridPrices(buyFirst,limD,'buy',spacing);
-  const sellPrices=buildGridPrices(sellFirst,limU,'sell',spacing);
+  if(spacing<commonTick-EPS || shortestRange<commonTick*5-EPS)spacing=0;
+  const buyPrices=spacing>0?buildGridPrices(buyFirst,limD,'buy',spacing):[];
+  const sellPrices=spacing>0?buildGridPrices(sellFirst,limU,'sell',spacing):[];
+  const enoughLevels=buyPrices.length===5&&sellPrices.length===5;
+  if(!enoughLevels)spacing=0;
   $('stepInfo').textContent = spacing>0 ? `間距 ${fmt(spacing,dec(commonTick))}` : '間距 —';
 
   let buys = [], sells = [], auxBuys = [], auxSells = [];
