@@ -1,11 +1,10 @@
 {
   "id": "./stock%207.3.html",
-  "id": "./stock%207.3.html",
   "name": "贏麻神器 Pro V7.3",
   "short_name": "贏麻神器",
   "description": "台股行情、選股與盤中下單試算工具",
   "lang": "zh-TW",
-  "start_url": "./stock%207.html",
+  "start_url": "./stock%207.3.html",
   "scope": "./",
   "display": "standalone",
   "display_override": [
